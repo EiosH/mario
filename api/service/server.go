@@ -2,12 +2,14 @@ package main
 
 import (
 	"context"
-	"google.golang.org/grpc"
 	"log"
 	"net"
 	"time"
+
+	pb "api/proto"
+
+	"google.golang.org/grpc"
 )
-import pb "api/proto"
 
 type SearchService struct {
 }
@@ -26,8 +28,10 @@ func main() {
 	if err != nil {
 		log.Fatalf("net.Listen err: %v", err)
 	}
+
+	defer lis.Close()
 	log.Println("init success!", time.Now())
 
 	server.Serve(lis)
-	log.Println("init success!", time.Now())
+
 }

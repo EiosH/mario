@@ -4,9 +4,10 @@ import "github.com/gin-gonic/gin"
 
 func SetupRouter() *gin.Engine {
 	r := gin.Default()
-	r.POST("/login", loginHandler)
-	r.POST("/logout", logoutHandler)
-	r.POST("/register", registerHandler)
-	r.GET("/userInfo", getUserInfoHandler)
+	api := r.Group("/api")
+	api.POST("/login", loginHandler)
+	api.POST("/logout", logoutHandler)
+	api.POST("/register", registerHandler)
+	api.GET("/userInfo", getUserInfoHandler)
 	return r
 }

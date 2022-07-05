@@ -1,7 +1,7 @@
 package routers
 
 import (
-	"errors"
+	jwt "app/utils"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -17,36 +17,44 @@ var MOCK_USER_TABLE = map[string]User{
 	"test": User{Name: "test", Id: "2", Password: "test"},
 }
 
-func LoginHandler(c *gin.Context) (interface{}, error) {
+func loginHandler(c *gin.Context) {
 	userMap := MOCK_USER_TABLE
 	json := User{}
 	c.BindJSON(&json)
 
 	id := json.Id
 	password := json.Password
-	var error error
+	message := "ok"
+	var token string
 
 	if v, ok := userMap[id]; ok {
 
 		if v.Password != password {
-			error = errors.New("密码错误")
+			message = "密码错误"
+		} else {
+			token, _ = jwt.GenerateToken(id)
 		}
 	} else {
-		error = errors.New("无该用户")
-
+		message = "无该用户"
 	}
 
-	return json, error
+	c.JSON(http.StatusOK, gin.H{
+		"message": message,
+		"data": gin.H{
+			"token": token,
+		},
+	})
+
 }
 
 func registerHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
-		"message": "logout",
+		"message": "register",
 	})
 }
 
 func getUserInfoHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
-		"message": "userinfo",
+		"message": "ok",
 	})
 }
